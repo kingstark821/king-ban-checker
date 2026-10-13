@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: king-ban-chercher
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: CHECK_API_URL
+        sync: false
+      - key: CHECK_API_KEY
+        sync: false
+      - key: CHECK_API_KEY_HEADER
+        value: Authorization
+      - key: BANNED_FIELD
+        value: banned
+      - key: PERMANENT_AFTER_DAYS
+        value: 80

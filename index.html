@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KING BAN CHECKER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05050b;--text:#f2f0ff;--accent:#9b5cff;--accent2:#25a7ff;--on:#fff;--mix:40%;--dim:30%;--ok:#6ee7b7;--err:#ff6b81;
+--muted:color-mix(in srgb,var(--text) 58%,transparent);--line:color-mix(in srgb,var(--accent) 32%,transparent);--panel:color-mix(in srgb,var(--accent) 8%,var(--bg))}
+*{box-sizing:border-box;margin:0}
+[hidden]{display:none!important}
+body{min-height:100dvh;display:flex;justify-content:center;align-items:center;padding:max(24px,env(safe-area-inset-top)) 18px max(24px,env(safe-area-inset-bottom));font-family:'Space Grotesk',system-ui,sans-serif;color:var(--text);overflow-x:hidden;
+background:radial-gradient(circle at 50% -10%,color-mix(in srgb,var(--accent) 26%,transparent),transparent 40%),radial-gradient(circle at 100% 100%,color-mix(in srgb,var(--accent2) 12%,transparent),transparent 36%),var(--bg)}
+body[data-pos=top]{align-items:flex-start}body[data-pos=bottom]{align-items:flex-end}
+.sky,.bgimg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.bgimg{background:center/cover no-repeat}
+.bgimg::after{content:"";position:absolute;inset:0;background:color-mix(in srgb,var(--bg) var(--dim),transparent)}
+.sky span{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.5;animation:tw 4s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:.85}}
+@keyframes fl{50%{transform:translateY(-6px)}}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}@keyframes pop{from{opacity:0;transform:scale(1.15)}}
+.card{position:relative;z-index:1;width:100%;max-width:440px;padding:34px 20px 24px;border-radius:24px;text-align:center;border:1px solid var(--line);
+background:color-mix(in srgb,var(--panel) var(--mix),transparent);backdrop-filter:blur(2px);box-shadow:0 30px 90px -35px #000e,0 0 45px color-mix(in srgb,var(--accent) 12%,transparent);animation:fl 5s ease-in-out infinite}
+.card:focus-within,.card:active{animation-play-state:paused}
+.ib{position:absolute;top:14px;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-size:18px;cursor:pointer;display:grid;place-items:center}
+#hist{right:62px}#menub{right:14px}.ib.s{position:static}
+.menu{position:absolute;top:60px;right:14px;z-index:5;min-width:220px;padding:6px;border-radius:14px;border:1px solid var(--line);background:var(--bg);box-shadow:0 14px 40px #000a;text-align:left}
+.menu button{display:block;width:100%;padding:13px 14px;background:none;border:0;border-radius:10px;color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.menu button:active,.item:active{background:color-mix(in srgb,var(--accent) 18%,transparent)}
+.mark{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;margin-bottom:14px}
+.crown{font-family:'Cinzel',serif;font-size:31px;line-height:1;color:color-mix(in srgb,var(--accent) 60%,white);text-shadow:0 0 8px var(--accent),0 0 24px color-mix(in srgb,var(--accent) 65%,transparent)}
+#photo{width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);box-shadow:0 0 24px color-mix(in srgb,var(--accent) 60%,transparent)}
+.line{width:76px;height:1px;margin-top:8px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);box-shadow:0 0 12px var(--accent)}
+h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(1.5rem,7.4vw,1.9rem);letter-spacing:.1em;margin:0 0 6px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 55%,white),var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{text-shadow:0 1px 8px #000a;color:var(--muted);font-size:.85rem;margin-bottom:24px}
+.row{display:flex;gap:8px}
+.f{width:100%;min-width:0;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:15px 'JetBrains Mono',monospace;outline:0}
+.f:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent)}
+.f::placeholder{color:var(--muted)}
+#cc{width:92px;flex:none;text-align:center}
+:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
+.btn{padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:600 .95rem 'Space Grotesk',sans-serif;cursor:pointer}
+.btn.main{border-color:transparent;color:var(--on);background:linear-gradient(100deg,var(--accent),var(--accent2));box-shadow:0 10px 28px color-mix(in srgb,var(--accent) 28%,transparent)}
+#go{width:100%;margin-top:14px;font-size:1rem;letter-spacing:.06em}
+.btn:disabled{opacity:.55}
+#result{margin-top:16px;min-height:12px}
+.rbox{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;padding:13px 12px 13px 16px;border-radius:16px;border:1px solid;animation:pop .35s both}
+.rbox::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:currentColor}
+.rbox.bad{color:var(--err);border-color:#ff6b8155;background:linear-gradient(100deg,#ff6b8128,#ff6b8208);box-shadow:0 0 28px #ff6b8130}
+.rbox.ok{color:var(--ok);border-color:#6ee7b755;background:linear-gradient(100deg,#6ee7b726,#6ee7b707);box-shadow:0 0 28px #6ee7b72a}
+.ri{width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:50%;border:1px solid currentColor;background:color-mix(in srgb,currentColor 18%,transparent);font-style:normal;font-weight:700}
+.rm{flex:1;min-width:0;text-align:center;color:var(--text);font-family:'Cinzel',serif;font-weight:900;letter-spacing:.04em;font-size:clamp(.88rem,4.3vw,1.08rem);overflow-wrap:anywhere}
+.cp{width:34px;height:34px;flex:none;border-radius:10px;border:1px solid var(--line);background:none;color:inherit;font-size:15px;cursor:pointer}
+.tbl{margin-top:10px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:color-mix(in srgb,var(--bg) 72%,transparent);animation:rise .4s .08s both;text-align:left}
+.tr{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;font-size:.86rem}
+.tr+.tr{border-top:1px solid var(--line)}
+.tr span{color:var(--muted)}.tr b{font-weight:600;text-align:right;overflow-wrap:anywhere}
+.pl{padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:color-mix(in srgb,var(--accent) 14%,transparent);font-size:.76rem}
+.pl.hot{color:#ffd1da;border-color:#ff6b8199;background:#ff6b8130;box-shadow:0 0 12px #ff6b8140}
+.err{color:var(--err);font-size:.9rem}.wait{color:var(--muted)}
+.dev{margin-top:22px;font-family:'Cinzel',serif;font-weight:700;letter-spacing:.1em;font-size:.95rem;color:color-mix(in srgb,var(--accent) 60%,white)}
+.dock{margin-top:12px;padding:8px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;border-radius:16px;border:1px solid var(--line);background:var(--panel)}
+.dock a{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px;border-radius:12px;text-align:center;text-decoration:none;font-weight:600;font-size:.84rem;line-height:1.2;color:var(--text);border:1px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 24%,var(--bg)),color-mix(in srgb,var(--accent2) 20%,var(--bg)))}
+.by{margin-top:16px;color:color-mix(in srgb,var(--accent) 60%,white)}
+dialog{margin:auto;width:min(92vw,440px);max-height:88dvh;padding:0;border:1px solid var(--line);border-radius:24px;background:var(--bg);color:var(--text);overflow:hidden}
+dialog[open]{display:flex;flex-direction:column}
+dialog::backdrop{background:#0009;backdrop-filter:blur(3px)}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+.dh h2{font-size:1.2rem}.sm{font-size:.72rem;letter-spacing:.2em;color:var(--muted);margin-top:4px}
+.db{padding:4px 20px 16px;overflow:auto;flex:1}
+.df{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--line)}.df .btn{flex:1}
+details{border-bottom:1px solid var(--line)}summary{padding:16px 0;cursor:pointer;font-weight:600;list-style:none}summary::after{content:"⌄";float:right;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:16px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--text);font:inherit;font-size:.9rem;cursor:pointer}
+.chip i{width:10px;height:10px;border-radius:50%}
+.chip[aria-pressed=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 24%,var(--bg))}
+.l{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 14px;font-size:.92rem}
+.l .f{width:auto;min-width:120px;font-family:inherit;padding:11px}
+.l input[type=range]{width:55%;accent-color:var(--accent)}
+.l input[type=color]{width:54px;height:38px;padding:2px;border-radius:8px;border:1px solid var(--line);background:none}
+.sw{appearance:none;width:52px;height:30px;border-radius:999px;background:var(--panel);border:1px solid var(--line);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:.2s}
+.sw:checked{background:color-mix(in srgb,var(--accent) 45%,var(--bg))}.sw:checked::after{left:25px;background:#fff}
+.t{margin-bottom:12px;text-align:left}.t label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:5px}
+.t .f{font-family:inherit;font-size:.95rem;padding:11px}
+.box{display:flex;align-items:center;gap:14px;padding-bottom:16px}
+.th{width:64px;height:64px;flex:none;border-radius:14px;overflow:hidden;border:1px dashed var(--line);display:grid;place-items:center;font-size:.7rem;color:var(--muted)}
+.th img{width:100%;height:100%;object-fit:cover}
+.acts{display:grid;gap:8px;flex:1}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;padding:12px 8px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.item small{color:var(--muted)}.item .b{color:var(--err)}.item .c{color:var(--ok)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="bgimg" id="bgimg" hidden></div>
+<div class="sky" id="sky"></div>
+
+<main class="card">
+  <button class="ib" id="hist" type="button" aria-label="Historique">🕘</button>
+  <button class="ib" id="menub" type="button" aria-label="Menu" aria-haspopup="true">⋮</button>
+  <div class="menu" id="menu" role="menu" hidden>
+    <button type="button" id="m-set">Réglages</button>
+    <button type="button" id="m-bg">Choisir une image de fond</button>
+    <button type="button" id="m-share">Partager</button>
+  </div>
+
+  <div class="mark"><div class="crown" id="crown" aria-hidden="true">♛</div><img id="photo" alt="Ma photo" hidden><div class="line"></div></div>
+  <h1 id="t-title">KING BAN CHECKER</h1>
+  <p class="sub" id="t-desc">Entre un numéro avec l'indicatif pays et découvre son statut.</p>
+
+  <div class="row">
+    <input class="f" id="cc" type="tel" inputmode="tel" value="+509" maxlength="5" aria-label="Indicatif pays" autocomplete="off">
+    <input class="f" id="num" type="tel" inputmode="tel" placeholder="37000000" aria-label="Numéro" autocomplete="off">
+  </div>
+  <button class="btn main" id="go" type="button">CHECK</button>
+  <div id="result" aria-live="polite"></div>
+
+  <p class="dev" id="t-pres">DEV BY KING STARK</p>
+  <nav class="dock" aria-label="Liens">
+    <a id="l-wa" href="https://chat.whatsapp.com/LD552OxNd8S66blj7Jgo8H" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+    <a id="l-ch" href="https://whatsapp.com/channel/0029VbCY0ob7YSd0Oc9d650O" target="_blank" rel="noopener noreferrer">📢 Chaîne</a>
+    <a id="l-tg" href="https://t.me/king_stark821" target="_blank" rel="noopener noreferrer">✈️ Telegram</a>
+    <a id="l-kg" href="https://king-generator-ai.lovable.app" target="_blank" rel="noopener noreferrer">🤖👾 KING GENERATOR</a>
+  </nav>
+  <p class="by">𝘣𝒿 𝐊𝐈𝐍𝐆 𝑺𝑻𝑨𝑹𝑲</p>
+</main>
+
+<dialog id="d-set">
+  <div class="dh"><div><h2>Réglages</h2><p class="sm" id="snote">· KING BAN CHECKER ·</p></div><button class="ib s" data-close type="button" aria-label="Fermer">✕</button></div>
+  <div class="db">
+    <details open><summary>Thèmes</summary><div class="chips" id="themes"></div></details>
+    <details><summary>Général</summary>
+      <label class="l">Position de la carte<select class="f" id="s-pos"><option value="top">Haut</option><option value="center">Centre</option><option value="bottom">Bas</option></select></label>
+      <label class="l">Résultat en fenêtre<input class="sw" id="s-dlg" type="checkbox"></label>
+    </details>
+    <details><summary>Transparence</summary><label class="l">Opacité de la carte<input id="s-mix" type="range" min="0" max="100"></label>
+      <label class="l">Assombrissement du fond<input id="s-dim" type="range" min="0" max="80"></label></details>
+    <details><summary>Couleurs</summary>
+      <label class="l">Fond<input id="c-bg" type="color"></label>
+      <label class="l">Texte<input id="c-tx" type="color"></label>
+      <label class="l">Accent<input id="c-ac" type="color"></label>
+    </details>
+    <details><summary>Textes</summary><div id="texts"></div></details>
+    <details><summary>Ma photo</summary>
+      <div class="box"><div class="th" id="p-th">Aucune</div><div class="acts"><button class="btn" id="p-pick" type="button">Choisir une photo</button><button class="btn" id="p-drop" type="button" hidden>Supprimer</button></div></div>
+      <input id="p-file" type="file" accept="image/*" hidden>
+    </details>
+    <details><summary>Fond</summary>
+      <div class="box"><div class="th" id="b-th">Aucun</div><div class="acts"><button class="btn" id="b-pick" type="button">Choisir une image</button><button class="btn" id="b-drop" type="button" hidden>Supprimer</button></div></div>
+      <input id="b-file" type="file" accept="image/*" hidden>
+    </details>
+  </div>
+  <div class="df"><button class="btn" id="reset" type="button">Réinitialiser</button><button class="btn main" data-close type="button">Appliquer</button></div>
+</dialog>
+
+<dialog id="d-hist">
+  <div class="dh"><h2>Historique</h2><button class="ib s" data-close type="button" aria-label="Fermer">✕</button></div>
+  <div class="db" id="hl"></div>
+  <div class="df"><button class="btn" id="hclear" type="button">Vider</button><button class="btn main" data-close type="button">Fermer</button></div>
+</dialog>
+
+<dialog id="d-res">
+  <div class="dh"><h2 id="r-num">Résultat</h2><button class="ib s" data-close type="button" aria-label="Fermer">✕</button></div>
+  <div class="db" id="r-body" style="padding-top:18px"></div>
+</dialog>
+
+<script>
+const $=id=>document.getElementById(id);
+const ls={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+const json=(k,f)=>{try{return JSON.parse(ls.get(k)||'null')||f}catch(e){return f}};
+
+/* ---- Thèmes et réglages ---- */
+const TH={royal:['Royal','#05050b','#f2f0ff','#9b5cff','#25a7ff'],ghost:['Ghost','#06060f','#e6e6f5','#7b7bff','#4b5bd6'],neon:['Neon Purple','#0a0414','#f5eaff','#b24bff','#ff4bd8'],ocean:['Ocean Blue','#040c18','#e8f3ff','#2e9bff','#22d3ee'],matrix:['Matrix','#020a04','#e6ffe9','#28d65a','#0fa84a'],rose:['Rose Gold','#12080b','#fff0ef','#e0a2a2','#f0c27b'],crimson:['Crimson','#12040a','#ffe9ee','#e0365b','#ff7a59'],cyber:['Cyber','#031014','#e5fbff','#00d0e0','#6d35ff'],sakura:['Sakura','#130810','#ffeaf4','#ff8fc0','#c77dff'],void:['Void','#000000','#e8e8ee','#8a8a99','#5c5c6e'],sunset:['Sunset','#140803','#fff1e6','#ff8a3d','#ff4d6d'],gold:['Or royal','#0b0716','#f6efd9','#e8b73a','#f7dc8a']};
+const D={th:'royal',bg:TH.royal[1],tx:TH.royal[2],ac:TH.royal[3],a2:TH.royal[4],pos:'center',dlg:false,mix:40,dim:30,cc:'+509'};
+const sv=json('king-ban-set',{});let S=Object.assign({},D,sv);if(sv.v!==2){S.mix=D.mix;S.dim=D.dim}S.v=2;
+['bg','tx','ac','a2'].forEach(k=>{if(!/^#[0-9a-f]{6}$/i.test(S[k]))S[k]=D[k]});
+if(!['top','center','bottom'].includes(S.pos))S.pos='center';
+S.mix=Math.min(100,Math.max(0,isNaN(+S.mix)?40:+S.mix));S.dim=Math.min(80,Math.max(0,isNaN(+S.dim)?30:+S.dim));
+const lum=h=>{const n=parseInt(h.slice(1),16);return .299*(n>>16)+.587*(n>>8&255)+.114*(n&255)};
+function applyS(){
+  const r=document.documentElement.style;
+  r.setProperty('--bg',S.bg);r.setProperty('--text',S.tx);r.setProperty('--accent',S.ac);r.setProperty('--accent2',S.a2);
+  r.setProperty('--on',lum(S.ac)>150?'#1a1030':'#fff');r.setProperty('--mix',S.mix+'%');r.setProperty('--dim',S.dim+'%');
+  document.body.dataset.pos=S.pos;
+  $('c-bg').value=S.bg;$('c-tx').value=S.tx;$('c-ac').value=S.ac;$('s-pos').value=S.pos;$('s-dlg').checked=!!S.dlg;$('s-mix').value=S.mix;$('s-dim').value=S.dim;
+  document.querySelectorAll('#themes .chip').forEach(c=>c.setAttribute('aria-pressed',String(c.dataset.t===S.th)));
+  ls.set('king-ban-set',JSON.stringify(S));
+}
+Object.keys(TH).forEach(k=>{const c=document.createElement('button');c.type='button';c.className='chip';c.dataset.t=k;c.innerHTML='<i style="background:'+TH[k][3]+'"></i>'+TH[k][0];
+  c.onclick=()=>{S.th=k;S.bg=TH[k][1];S.tx=TH[k][2];S.ac=TH[k][3];S.a2=TH[k][4];applyS()};$('themes').appendChild(c)});
+[['c-bg','bg'],['c-tx','tx'],['c-ac','ac']].forEach(([id,k])=>$(id).oninput=e=>{S[k]=e.target.value;S.th='custom';applyS()});
+$('s-pos').onchange=e=>{S.pos=e.target.value;applyS()};
+$('s-dlg').onchange=e=>{S.dlg=e.target.checked;applyS()};
+$('s-mix').oninput=e=>{S.mix=+e.target.value;applyS()};
+$('s-dim').oninput=e=>{S.dim=+e.target.value;applyS()};
+
+/* ---- Textes modifiables ---- */
+const DT={title:'KING BAN CHECKER',desc:"Entre un numéro avec l'indicatif pays et découvre son statut.",ban:'NUMBER IS BANNED',ok:'NUMBER IS NOT BANNED',go:'CHECK',pres:'DEV BY KING STARK',wa:'💬 WhatsApp',ch:'📢 Chaîne',tg:'✈️ Telegram',kg:'🤖👾 KING GENERATOR'};
+const TG={title:'t-title',desc:'t-desc',go:'go',pres:'t-pres',wa:'l-wa',ch:'l-ch',tg:'l-tg',kg:'l-kg'};
+const TL={title:'Titre',desc:'Description',ban:'Message : numéro banni',ok:'Message : numéro non banni',go:'Bouton de recherche',pres:'Texte de présentation',wa:'Bouton groupe WhatsApp',ch:'Bouton chaîne WhatsApp',tg:'Bouton Telegram',kg:'Bouton KING GENERATOR'};
+const saved=json('king-ban-texts',{});
+if(saved.title==='KING BAN CHERCHER')delete saved.title;if(saved.go==='CHERCHER')delete saved.go; /* anciens libellés */
+Object.keys(DT).forEach(k=>{const w=document.createElement('div');w.className='t';
+  w.innerHTML='<label for="e-'+k+'">'+TL[k]+'</label>'+(k==='desc'||k==='pres'?'<textarea class="f" id="e-'+k+'" rows="2" maxlength="160"></textarea>':'<input class="f" id="e-'+k+'" type="text" maxlength="40">');
+  $('texts').appendChild(w);const e=$('e-'+k);e.value=typeof saved[k]==='string'&&saved[k].trim()?saved[k].slice(0,160):DT[k];e.oninput=applyT});
+function applyT(){const o={};Object.keys(DT).forEach(k=>{const v=$('e-'+k).value.trim()||DT[k];if(v!==DT[k])o[k]=v;if(TG[k])$(TG[k]).textContent=v});document.title=$('e-title').value.trim()||DT.title;ls.set('king-ban-texts',JSON.stringify(o))}
+
+/* ---- Photo et fond ---- */
+function img(f,m,q){return new Promise((ok,ko)=>{const r=new FileReader();r.onerror=ko;r.onload=()=>{const i=new Image();i.onerror=ko;i.onload=()=>{const k=Math.min(1,m/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k)||1;c.height=Math.round(i.height*k)||1;c.getContext('2d').drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',q))};i.src=r.result};r.readAsDataURL(f)})}
+function note(m){const n=$('snote');n.textContent=m;clearTimeout(note.t);note.t=setTimeout(()=>n.textContent='· KING BAN CHECKER ·',3000)}
+function wire(key,max,q,p,show){
+  const f=$(p+'-file'),th=$(p+'-th'),drop=$(p+'-drop'),empty=th.textContent;
+  const set=s=>{show(s);drop.hidden=!s;$(p+'-pick').textContent=s?'Remplacer':(p==='p'?'Choisir une photo':'Choisir une image');th.innerHTML=s?'<img alt="Aperçu" src="'+s+'">':empty};
+  $(p+'-pick').onclick=()=>f.click();
+  f.onchange=async()=>{const x=f.files&&f.files[0];f.value='';if(!x)return;
+    if(!/^image\//.test(x.type)){note('Choisis une image (JPG, PNG, WebP).');return}
+    try{const d=await img(x,max,q);set(d);note(ls.set(key,d)?'Enregistré ✓':'Affiché, mais trop lourd pour être gardé.')}catch(e){note('Image illisible. Essaie-en une autre.')}};
+  drop.onclick=()=>{set(null);ls.del(key);note('Supprimé.')};
+  const s=ls.get(key);if(s&&s.indexOf('data:image/')===0)set(s);else set(null);
+  return set;
+}
+wire('king-ban-photo',512,.85,'p',s=>{$('photo').hidden=!s;$('crown').hidden=!!s;if(s)$('photo').src=s});
+wire('king-ban-bg',1280,.8,'b',s=>{const b=$('bgimg');b.hidden=!s;b.style.backgroundImage=s?'url('+s+')':''});
+$('m-bg').onclick=()=>{closeMenu();$('b-pick').click()};
+
+/* ---- Menu, fenêtres, réinitialisation ---- */
+const menu=$('menu');
+function closeMenu(){menu.hidden=true}
+$('menub').onclick=e=>{e.stopPropagation();menu.hidden=!menu.hidden};
+document.addEventListener('click',e=>{if(!menu.contains(e.target))closeMenu()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu()});
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+$('m-set').onclick=()=>{closeMenu();$('d-set').showModal()};
+$('m-share').onclick=async()=>{closeMenu();const d={title:document.title,url:location.href};try{if(navigator.share)await navigator.share(d);else{await navigator.clipboard.writeText(location.href);alert('Lien copié ✓')}}catch(e){}};
+$('reset').onclick=()=>{if(!confirm('Réinitialiser thèmes, réglages et textes ?'))return;S=Object.assign({},D);applyS();Object.keys(DT).forEach(k=>$('e-'+k).value=DT[k]);applyT();ls.del('king-ban-texts');note('Réinitialisé ✓')};
+
+/* ---- Historique ---- */
+let H=json('king-ban-hist',[]);if(!Array.isArray(H))H=[];
+function renderH(){const l=$('hl');if(!H.length){l.innerHTML='<p class="wait" style="padding:18px 0">Aucune recherche pour le moment.</p>';return}
+  l.innerHTML=H.map((h,i)=>'<button class="item" type="button" data-i="'+i+'"><span>+'+h.n+'<br><small>'+new Date(h.t).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+'</small></span><b class="'+(h.b?'b':'c')+'">'+(h.b?'BANNED':'NOT BANNED')+'</b></button>').join('')}
+$('hl').onclick=e=>{const b=e.target.closest('.item');if(!b)return;$('num').value='+'+H[+b.dataset.i].n;$('d-hist').close()};
+$('hist').onclick=()=>{renderH();$('d-hist').showModal()};
+$('hclear').onclick=()=>{H=[];ls.del('king-ban-hist');renderH()};
+
+/* ---- Résultat ---- */
+const tx=k=>$('e-'+k).value.trim()||DT[k];
+const h=v=>v==null||v===''?'–':esc(v);
+const when=v=>{if(v==null||v==='')return '–';const t=Date.parse(v);return isNaN(t)?esc(v):new Date(t).toLocaleString('fr-FR',{dateStyle:'medium',timeStyle:'short'})};
+function view(n,d){
+  if(!d.banned){const m=tx('ok');return '<div class="rbox ok"><i class="ri">✓</i><span class="rm">'+esc(m)+'</span><button class="cp" type="button" data-copy="'+esc(m+' · +'+n)+'" aria-label="Copier">⧉</button></div>'}
+  const x=d.details||{},m=tx('ban'),type=d.permanent?'ban permanent':x.type;
+  const R=[['Phone',h('+'+n)],['Ban type','<b class="pl'+(d.permanent?' hot':'')+'">'+(type?'⊗ '+esc(type):'–')+'</b>'],['Violation',h(x.violation)],['Category','<b class="pl">'+(x.category?'◈ '+esc(x.category):'–')+'</b>'],['Appeal','<b class="pl">'+(x.appeal?'◈ '+esc(x.appeal):'–')+'</b>'],['EU',h(x.eu)],['Banned at',when(x.bannedAt)],['Appeal filed',when(x.appealFiled)]];
+  return '<div class="rbox bad"><i class="ri">✕</i><span class="rm">'+esc(m)+'</span><button class="cp" type="button" data-copy="'+esc(m+' · +'+n+(type?' · '+type:''))+'" aria-label="Copier">⧉</button></div><div class="tbl">'+R.map(r=>'<div class="tr"><span>'+r[0]+'</span>'+(r[1].indexOf('<b')===0?r[1]:'<b>'+r[1]+'</b>')+'</div>').join('')+'</div>'}
+document.addEventListener('click',async e=>{const b=e.target.closest('.cp');if(!b)return;const t=b.dataset.copy;
+  try{await navigator.clipboard.writeText(t)}catch(_){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(__){}a.remove()}
+  b.textContent='✓';setTimeout(()=>b.textContent='⧉',1400)});
+
+/* ---- Recherche ---- */
+const out=$('result'),go=$('go');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fullNumber(){const raw=$('num').value.trim();
+  if(/^(\+|00)/.test(raw))return raw.replace(/\D/g,'').replace(/^00/,'');
+  return $('cc').value.replace(/\D/g,'')+raw.replace(/\D/g,'')}
+async function search(){
+  const n=fullNumber();
+  if(n.length<7||n.length>15){out.innerHTML='<p class="err">Numéro invalide. Entre l\'indicatif et 7 à 15 chiffres au total.</p>';return}
+  S.cc=$('cc').value;applyS();
+  go.disabled=true;out.innerHTML='<p class="wait">Recherche en cours…</p>';
+  try{
+    const r=await fetch('/api/check?number='+encodeURIComponent(n)),d=await r.json();
+    if(!r.ok)throw new Error(d.error||'Erreur inconnue');
+    const v=view(n,d);
+    H.unshift({n:n,b:!!d.banned,t:Date.now()});H=H.slice(0,30);ls.set('king-ban-hist',JSON.stringify(H));
+    if(S.dlg){out.innerHTML='';$('r-num').textContent='+'+n;$('r-body').innerHTML=v;$('d-res').showModal()}else out.innerHTML=v;
+  }catch(e){out.innerHTML='<p class="err">'+esc(e.message)+'</p>'}
+  finally{go.disabled=false}
+}
+go.onclick=search;$('num').onkeydown=e=>{if(e.key==='Enter')search()};
+
+/* ---- Démarrage ---- */
+$('cc').value=S.cc||'+509';
+applyS();applyT();
+for(let i=0;i<60;i++){const s=document.createElement('span');s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';s.style.animationDelay=Math.random()*4+'s';$('sky').appendChild(s)}
+</script>
+</body>
+</html>

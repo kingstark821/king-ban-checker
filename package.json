@@ -1,0 +1,18 @@
+{
+  "name": "king-ban-checker",
+  "version": "1.1.0",
+  "description": "KING BAN CHERCHER - verificateur de ban royal (page web + serveur Node sans dependance)",
+  "author": "KING STARK",
+  "private": true,
+  "license": "UNLICENSED",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["king", "ban", "checker", "render"]
+}
